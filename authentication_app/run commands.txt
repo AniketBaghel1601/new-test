@@ -1,0 +1,17 @@
+## Running and Testing Instructions
+
+
+### Installation
+1. Navigate to the project directory: `cd project-directory`
+2. Install dependencies: `npm install`
+
+### Configuration
+- Copy the `.env.example` file to `.env` and configure environment variables as needed.
+
+### Running the Application
+- Start the server: `npm run server`
+- The application will be running on http://localhost:8080 by default.
+
+### Testing the Application
+1. Test API endpoints using Postman or curl.
+
