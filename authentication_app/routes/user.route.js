@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const userRoute = express.Router();
 
 userRoute.post('/register',async(req,res)=>{
-    const {name,email,password} = req.body;
+    const {name,email,password,role} = req.body;
 
     try{
         const user = await userModel.findOne({email});
@@ -18,7 +18,7 @@ userRoute.post('/register',async(req,res)=>{
                     res.status(500).json({error : err});
                 }
                 else{
-                    const newUser = new userModel({name,email,password:hash})
+                    const newUser = new userModel({name,email,password:hash,role})
                     await newUser.save();
                     res.status(200).json({msg : "new user registered"});
                 }
@@ -64,16 +64,21 @@ userRoute.get('/dashboard',auth,(req,res)=>{
 })
 
 
-userRoute.put('/replaceUser/:userId',auth,access(["admin"]),async(req,res)=>{
-    try{
-    const userId = req.params.userId;
-    const payload = req.body;
-    const user = await userModel.findByIdAndUpdate(userId,payload);
-    user.save();
-}catch(err){
-    res.status(400).json({error : err});
-}
-})
+userRoute.put('/replaceUser/:userId', auth, access(["admin"]), async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const payload = req.body;
+        const user = await userModel.findByIdAndUpdate(userId, payload, { new: true }); // Add { new: true } to return the updated document
+        if (user) {
+            res.status(200).json({ msg: "User replaced successfully", user });
+        } else {
+            res.status(404).json({ msg: "User not found" });
+        }
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
 
 
 module.exports = {
